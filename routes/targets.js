@@ -24,7 +24,7 @@ router.get('/:targetID', async (req, res) => {
 
 // POST A TARGET
 router.post('/', async (req, res) => {
-    const newTarget;
+    const newTarget = new Target();
     if (!req.body.description) {
         // make a Target model with only the name
         newTarget = new Target( 
