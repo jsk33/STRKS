@@ -8,7 +8,8 @@ const TargetSchema = mongoose.Schema(
         },
         description: {
             type: String,
-            required: false
+            required: false,
+            default: "no description"
         },
         count: {
             type: Number,
@@ -20,7 +21,7 @@ const TargetSchema = mongoose.Schema(
             required: true,
             default: false
         }
-    } 
+    }
 ); 
 
 module.exports = mongoose.model('Target', TargetSchema);
