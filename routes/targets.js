@@ -24,12 +24,23 @@ router.get('/:targetID', async (req, res) => {
 
 // POST A TARGET
 router.post('/', async (req, res) => {
-    const newTarget = new Target( 
-        {
-            name: req.body.name,
-            description: req.body.description
-        } 
-    );
+    const newTarget;
+    if (!req.body.description) {
+        // make a Target model with only the name
+        newTarget = new Target( 
+            {
+                name: req.body.name,
+            } 
+        );
+    } else {
+        // make a Target model with name and description
+        newTarget = new Target( 
+            {
+                name: req.body.name,
+                description: req.body.description
+            }
+        ); 
+    }
     
     try {
         const savedTarget = await newTarget.save();
