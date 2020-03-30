@@ -47,7 +47,11 @@ router.patch('/:targetID', async (req, res) => {
     // the req.body should also specify the propName (ex. "prop name: name", if you want to update the name)
     const updateOps = {};
     for (const ops of req.body) {
-        updateOps[ops.propName] = ops.value;
+        if (ops.propName === "due") {
+            updateOps[ops.propName] = new Date(new Date().setHours(48, 0, 0, 0));
+        } else {
+            updateOps[ops.propName] = ops.value;
+        }
     }
     
     try {
