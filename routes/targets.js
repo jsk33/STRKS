@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
         const targets = await Target.find();
         res.json(targets).status(200);
     } catch(err) {
-        res.json({error: err}).status(500);
+        res.json({ message: err.message }).status(500);
     }
 });
 
@@ -18,7 +18,7 @@ router.get('/:targetID', async (req, res) => {
         const target = await Target.findById(req.params.targetID);
         res.json(target).status(200);
     } catch(err) {
-        res.json({error: err}).status(500);
+        res.json({ message: err.message }).status(500);
     }
 });
 
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
         const savedTarget = await newTarget.save();
         res.json(savedTarget).status(200);
     } catch(err) {
-        res.json({error: err}).status(500);
+        res.json({ message: err.message }).status(500);
     }
 });
 
@@ -62,7 +62,7 @@ router.patch('/:targetID', async (req, res) => {
         );
         res.json(target).status(200);
     } catch(err) {
-        res.json({error: err}).status(500);
+        res.json({ message: err.message }).status(500);
     }
 });
 
@@ -72,10 +72,8 @@ router.delete('/:targetID', async (req, res) => {
         const removedTarget = await Target.findOneAndRemove({_id: req.params.targetID}, {useFindAndModify: false});
         res.json(removedTarget).status(200);
     } catch(err) {
-        res.json({error: err}).status(500);
+        res.json({ message: err.message }).status(500);
     }
 });
 
-
-  
 module.exports = router;

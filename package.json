@@ -1,10 +1,11 @@
 {
-  "name": "Streaks-REST-API",
+  "name": "strks_rest_api",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node ./server.js",
+    "dev": "nodemon ./server.js"
   },
   "repository": {
     "type": "git",
@@ -18,10 +19,14 @@
   },
   "homepage": "https://github.com/jsk33/Streaks-REST-API#readme",
   "dependencies": {
+    "connect-mongo": "^3.2.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.9.5",
-    "nodemon": "^2.0.2"
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.9.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
   }
 }
