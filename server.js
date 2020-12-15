@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const path = require('path');
 
 const targetsRouter = require('./routes/targets');
 
@@ -14,9 +15,14 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/targets', targetsRouter);
 
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'pug')
+
+app.use(express.static(path.join(__dirname + 'public')))
+
 // HOMEPAGE
 app.get('/', (req, res) => {
-    res.send('Welcome to the STRKS RESTful API service.');
+    res.render('index', {title: 'Home'});
 });
 
 // CONNECT TO DB
