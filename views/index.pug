@@ -1,5 +1,11 @@
 extends layout
 
 block layout-content
-    h1.Header Welcome to STRKS
-    a(href='/user').LogInButton log-in
+    header
+        nav
+            a(href='/') STRKS
+            ul
+                li 
+                    a(href='/user') log-in
+                li
+                    a(href='/rewards') rewards

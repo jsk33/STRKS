@@ -1,0 +1,126 @@
+ form
+        label name
+        input(type='text' name='name' value=`${ javascript }`)
+        button(type='submit') Create
+
+    - const myClasses = ["class1", "class2", "class3"]
+        div(class=myClasses)
+
+    - const myStyles = {
+        "color": "red",
+        "background-color": "blue"
+    }
+
+    div(style=myStyles)
+
+
+    - const myAttributes = {
+        "src": "path",
+        "alt": "this is my photo"
+    }
+    img&attributes(myAttributes)
+
+    input(type='text' disabled=false)
+
+
+        h1 For/Each Loop
+        each number, index in [1,2,3,4,5]
+            p=number + "-" + index
+        
+    - const names = ["joe", "john", "sophie", "sarah"]
+    each name in names
+        p=name
+    
+    - const grades = {"web dev": 85, "software design": 78}
+    for grade, course in grades
+        p= grade + "in " + course
+    else
+        strong No values are here!
+
+//- conditionals 
+- let user = { name: "Dom", loggedIn: false, lastLogin: 6 }
+if user.loggedIn
+    p
+        | Welcome back,
+        strong #{ user.name }
+else if user.lastLogin < 10
+    p your last login was #{user.lastLogin} minutes ago
+    p 
+        a(href='/login') Log In Again
+else
+    a(href='/login') Log In
+
+//- case/switch statements
+- const orderStatus = 'pending'
+
+case orderStatus
+    when 'pending'
+        p your order is pending
+    when 'in_transit'
+        p your order is on the move
+    when 'completed'
+        p your order has been completed
+    default 
+        p sorry we aren't sure what happened with your order
+
+//- include repeating things are nav bars into its own pug file and then include it wherever
+h1 Company Name
+nav
+    a(href='index.html') Home
+    a(href='about.html') About us
+
+include includes/nav
+include includes/nav.pug
+//- both works
+
+
+//- mixins: reusable blocks of pug code; behave like functions; can call these mixins and pass in data
+mixin comment(commentData)
+    .comment
+        if commentData.postedByAdmin
+            em (Posted by Admin)
+        .date=commentData.date
+        .author=commentData.author
+        .text=commentData.text
+
+doctype html
+html
+    head
+        title Mixins in Pug
+        style. 
+            .comment {
+                font-family: sans-serif;
+                line-height: 1.5;
+                padding: 10px;
+                border: 1px solid #555;
+                width: 250px
+            }
+            .date {
+
+            }
+            .author {
+
+            }
+            .text {
+
+            }
+    body
+        //- .comment
+        //-     .date 04-02-2018
+        //-     .author dcode
+        //-     .text hey mate! nice tutorials.
+        - const c = {
+            postedByAdmin: true,
+            date: '04-02-2018',
+            author: 'dcode',
+            text: 'hey mate good tutorials'
+        }
+
+        - const c1 = {
+            date: '04-02-2018',
+            author: 'asdfasdfasddfsad',
+            text: 'hey mate good tutorials'
+        }
+
+        +comment(c)
+        +comment(c1)

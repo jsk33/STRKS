@@ -1,9 +1,10 @@
-GET http://localhost:8000/targets
+GET http://localhost:8000/api/targets
 
 ###
-POST http://localhost:8000/targets
+POST http://localhost:8000/api/targets
 Content-Type: application/json
 
 {
+    "name": "what up",
     "description": "hello"
 }

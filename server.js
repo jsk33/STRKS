@@ -17,7 +17,7 @@ const userRouter = require('./routes/user')
 app.use('/api/targets', targetsRouter)
 app.use('/user', userRouter)
 
-// views
+// set views if you want to use a template engine like pug
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 

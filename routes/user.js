@@ -7,7 +7,7 @@ const path = require('path')
 
 // get all
 router.get('/', fetchTargets, (req, res) => {
-    res.render('user', { title: "strks", targets: res.targets})
+    res.render('user', { title: "user", targets: res.targets })
 })
 
 async function fetchTargets(req, res, next) {
@@ -26,7 +26,36 @@ async function fetchTargets(req, res, next) {
 // get
 
 // post
+router.post('/', postTarget, fetchTargets, (req, res) => {
+    res.render('user', { title: "user", targets: res.targets })
+})
 
+async function postTarget(req, res, next) {
+
+    if (process.env.NODE_ENV !== 'production') {
+        try {
+            targets = await fetch('http://localhost:8000/api/targets', {
+                method: 'post',
+                body: JSON.stringify(req.body),
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => res.json())
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
+    } else {
+        try {
+            targets = await fetch('https://strks-web.herokuapp.com/api/targets', {
+                method: 'post',
+                body: JSON.stringify(req.body),
+                headers: { 'Content-Type': 'application/json' }
+            }).then(res => res.json())
+        } catch (err) {
+            res.status(400).json({ message: err.message });
+        }
+    }
+    
+    next()
+}
 // update
 
 // delete
