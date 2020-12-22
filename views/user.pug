@@ -6,21 +6,22 @@ block layout-content
             a(href='/') STRKS
             ul
                 li
-                    a(href='/') log-out
+                    a(href='/rewards') REWARDS
+                li
+                    a(href='/about') ABOUT
                 li 
-                    a(href='/rewards') rewards
+                    a(href='/logout') LOG-OUT
     
-    form(method="POST", action="/user")
+    form(class="newTargetForm-js")
         .form-group
-            label Name:
-            input(type="text" name="name" placeholder="New Target")
+            input(type="text" id="targetName" placeholder="new target")
         .form-group
-            label Description:
-            input(type="text" name="description" placeholder="Description")
+            input(type="text" id="targetDescription" placeholder="describe your target")
         br
-        input(type="submit", value="Register your new target")
-    ul
-        for target in targets
-            li=target.name
-        else 
-            li No targets yet! Try adding some :)
+        input(type="submit" value="Register your new target")
+    
+    h3 Your Targets:
+    
+    ul(class="targetList-js")
+
+    script(src="/javascripts/user.js")

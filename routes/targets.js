@@ -60,7 +60,7 @@ router.patch('/:targetID', async (req, res) => {
             { $set: updateOps }
             // for example: { $set: {name: req.body.name} }
         );
-        res.json(target).status(200);
+        res.status(200).json(target);
     } catch(err) {
         res.json({ message: err.message }).status(500);
     }

@@ -3,6 +3,17 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
 const path = require('path')
+const { requiresAuth } = require('express-openid-connect')
+const { auth } = require('express-openid-connect')
+
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.AUTH_SECRET,
+  baseURL: process.env.AUTH_BASE_URL,
+  clientID: process.env.AUTH_CLIENT_ID,
+  issuerBaseURL: process.env.AUTH_ISSUER_BASE_URL
+};
 
 const app = new express()
 
@@ -24,9 +35,23 @@ app.set('view engine', 'pug')
 // static files
 app.use(express.static(path.join(__dirname, 'public')))
 
-// HOMEPAGE routing
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+app.use(auth(config));
+
+
+//HOMEPAGE routing
 app.get('/', (req, res) => {
-    res.render('index', {title: 'Home'})
+  if (req.oidc.isAuthenticated()) {
+    res.render('index', { title: 'Home', authenticated: true })
+  } else {
+    res.render('index', { title: 'Home', authenticated: false })
+  }
+  
+})
+
+// PROFILE routing; example of using 'requiresAuth()' middleware
+app.get('/profile', requiresAuth(), (req, res) => {
+  res.send(JSON.stringify(req.oidc.user))
 })
 
 // CONNECT TO DB

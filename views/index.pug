@@ -5,7 +5,13 @@ block layout-content
         nav
             a(href='/') STRKS
             ul
-                li 
-                    a(href='/user') log-in
                 li
-                    a(href='/rewards') rewards
+                    a(href='/rewards') REWARDS
+                li
+                    a(href='/about') ABOUT
+                li 
+                    if authenticated
+                        a(href='/logout') LOG-OUT
+                    else
+                        a(href='/login') LOG-IN
+    h2 Welcome to STRKS    
