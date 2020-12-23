@@ -1,46 +1,50 @@
 const express = require('express');
 const router = express.Router();
 const Target = require('../models/Target');
+const { requiresAuth } = require('express-openid-connect')
+const { auth } = require('express-openid-connect')
+
 
 // GET ALL TARGETS 
-router.get('/', async (req, res) => {
+router.get('/', requiresAuth(), async (req, res) => {
     try {
-        const targets = await Target.find();
-        res.json(targets).status(200);
+        const targets = await Target.find({ email: req.oidc.user.email });
+        res.status(200).json(targets);
     } catch(err) {
-        res.json({ message: err.message }).status(500);
+        res.status(500).json({ message: err.message });
     }
 });
 
 // GET A SPECIFIC TARGET
-router.get('/:targetID', async (req, res) => {
+router.get('/:targetID', requiresAuth(), async (req, res) => {
     try {
         const target = await Target.findById(req.params.targetID);
-        res.json(target).status(200);
+        res.status(200).json(target);
     } catch(err) {
-        res.json({ message: err.message }).status(500);
+        res.status(500).json({ message: err.message });
     }
 });
 
 // POST A TARGET
-router.post('/', async (req, res) => {
+router.post('/', requiresAuth(), async (req, res) => {
     const newTarget = new Target( 
         {
             name: req.body.name,
-            description: req.body.description
+            description: req.body.description,
+            email: req.oidc.user.email
         } 
     );
     
     try {
         const savedTarget = await newTarget.save();
-        res.json(savedTarget).status(200);
+        res.status(200).json(savedTarget);
     } catch(err) {
         res.status(400).json({ message: err.message });
     }
 });
 
 // UPDATE A TARGET
-router.patch('/:targetID', async (req, res) => {
+router.patch('/:targetID', requiresAuth(), async (req, res) => {
     // if you don't want to update every single key-value pair of the object
     // just see what you want to update from the req.body
     // need to make sure the req.body is an array of objects, instead of an object so that it can be iterable
@@ -62,17 +66,17 @@ router.patch('/:targetID', async (req, res) => {
         );
         res.status(200).json(target);
     } catch(err) {
-        res.json({ message: err.message }).status(500);
+        res.status(500).json({ message: err.message });
     }
 });
 
 // DELETE A TARGET
-router.delete('/:targetID', async (req, res) => {
+router.delete('/:targetID', requiresAuth(), async (req, res) => {
     try {
         const removedTarget = await Target.findOneAndRemove({_id: req.params.targetID}, {useFindAndModify: false});
-        res.json(removedTarget).status(200);
+        res.status(200).json(removedTarget);
     } catch(err) {
-        res.json({ message: err.message }).status(500);
+        res.status(500).json({ message: err.message });
     }
 });
 

@@ -6,8 +6,8 @@ const path = require('path')
 
 
 // get all
-router.get('/', fetchTargets, (req, res) => {
-    res.render('user', { title: "user", targets: res.targets })
+router.get('/', (req, res) => {
+    res.render('user', { title: "User" })
 })
 
 async function fetchTargets(req, res, next) {

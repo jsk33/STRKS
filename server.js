@@ -22,6 +22,9 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+app.use(auth(config));
+
 // routers
 const targetsRouter = require('./routes/targets')
 const userRouter = require('./routes/user')
@@ -35,23 +38,20 @@ app.set('view engine', 'pug')
 // static files
 app.use(express.static(path.join(__dirname, 'public')))
 
-// auth router attaches /login, /logout, and /callback routes to the baseURL
-app.use(auth(config));
-
 
 //HOMEPAGE routing
 app.get('/', (req, res) => {
   if (req.oidc.isAuthenticated()) {
-    res.render('index', { title: 'Home', authenticated: true })
+    res.redirect('/user')
   } else {
-    res.render('index', { title: 'Home', authenticated: false })
+    res.render('index', { title: 'Home' })
   }
   
 })
 
 // PROFILE routing; example of using 'requiresAuth()' middleware
 app.get('/profile', requiresAuth(), (req, res) => {
-  res.send(JSON.stringify(req.oidc.user))
+  res.send(JSON.stringify(req.oidc.user.email))
 })
 
 // CONNECT TO DB

@@ -25,6 +25,10 @@ const TargetSchema = mongoose.Schema(
             type: Date,
             required: true,
             default: new Date(new Date().setHours(24, 0, 0, 0))
+        },
+        email: {
+            type: String,
+            required: true
         }
     }
 ); 
