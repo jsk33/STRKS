@@ -10,29 +10,33 @@ async function handleSubmit(event) {
 
     const newTargetName = newTargetNameTextField.value;
     const newTargetDescription = newTargetDescriptionTextField.value;
+    const dataToPost = { name: newTargetName, description: newTargetDescription }
     const endpoint = "http://localhost:8000/api/targets";
 
-    const postedData = await postData(endpoint, { name: newTargetName, description: newTargetDescription });
-    console.log(postedData);
-    await fetchTargets();
-    targetList.innerHTML = '';
-    renderTargets(targets);
+    try {
+        await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(dataToPost) // body data type must match "Content-Type" header
+        }).then(res => res.json())
+            .then(res => console.log(`The following has been posted: ${res.name}`))      
+        
+        // get the list of targets including the newly posted one
+        await fetchTargets()
 
-    newTargetNameTextField.value = '';
-    newTargetDescriptionTextField.value = '';
-}
+        // render the new list of targets
+        targetList.innerHTML = ''
+        renderTargets(targets)
 
-async function postData(url = '', data = {}) {
-    // Default options are marked with *
-    const response = await fetch(url, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(data) // body data type must match "Content-Type" header
-    });
-    return await response.json(); // parses JSON response into native JavaScript objects
+        // clear the text input forms
+        newTargetNameTextField.value = ''
+        newTargetDescriptionTextField.value = ''
+    } catch (err) {
+        console.log(err.message)
+    }
 }
 
 async function handleComplete(event) {
@@ -85,12 +89,12 @@ async function handleDelete(event) {
         })
             .then(res => res.json())
             .then(res => console.log(`The following has been deleted: ${ res.name }`))
+        
+        // remove the target item from the rendered list of targets
+        targetListElement.remove();
     } catch (err) {
         console.log(err.message)
     }
-    
-    // remove the target item from the rendered list of targets
-    targetListElement.remove();
 }
 
 function renderTargets(targets) {
