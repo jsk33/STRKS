@@ -72,32 +72,25 @@ async function updateData(url = '', data = {}) {
 
 async function handleDelete(event) {
     // delete the target item using its id
-    const targetID = event.target.parentNode.id;
-    const endpointID = `http://localhost:8000/api/targets/${targetID}`;
+    const targetListElement = event.target.parentElement
+    const targetID = targetListElement.id
+    const endpointID = `http://localhost:8000/api/targets/${targetID}`
 
-    // deleteData(endpointID).then((data) => {
-    //     console.log(data);
-    //     targetList.innerHTML = '';
-    //     fetchTargets();
-    //     renderTargets(targets);
-    // });
-
-    const deletedData = await deleteData(endpointID);
-    console.log(`${deletedData} has been deleted`);
-    await fetchTargets();
-    targetList.innerHTML = '';
-    renderTargets(targets);
-}
-
-async function deleteData(url='') {
-    // Default options are marked with *
-    const response = await fetch(url, {
-        method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
-        headers: {
-          'Content-Type': 'application/json'
-        }
-    });
-    return await response.json(); // parses JSON response into native JavaScript objects
+    try {
+        await fetch(endpointID, {
+            method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+            headers: {
+                  'Content-Type': 'application/json'
+            }
+        })
+            .then(res => res.json())
+            .then(res => console.log(`The following has been deleted: ${ res.name }`))
+    } catch (err) {
+        console.log(err.message)
+    }
+    
+    // remove the target item from the rendered list of targets
+    targetListElement.remove();
 }
 
 function renderTargets(targets) {
@@ -124,15 +117,14 @@ function renderTargets(targets) {
         listItem.appendChild(deleteBtn);
 
         targetList.appendChild(listItem);
-    });
-
-    console.log('rendered targets');
+    })
 }
 
 async function fetchTargets() {
-    const res = await fetch('http://localhost:8000/api/targets');
-    const data = await res.json();
-    targets = data;
+    const response = await fetch('http://localhost:8000/api/targets');
+    const fetchedData = await response.json();
+
+    targets = fetchedData;
     console.log(targets);
 }
 
@@ -171,9 +163,17 @@ async function fetchTargets() {
 
 async function init() {
     newTargetForm.addEventListener("submit", handleSubmit);
-    await fetchTargets();
-    //await checkTargets(targets);
-    await fetchTargets();
+    
+    try {
+        await fetchTargets();
+    } catch (err) {
+        console.log("could not fetch")
+    }
+    
+    // check the fetched targets on whether they're expired or not; take necessay actions and fetch again
+    // await checkTargets(targets);
+    // await fetchTargets();
+    
     renderTargets(targets);
 }
 
