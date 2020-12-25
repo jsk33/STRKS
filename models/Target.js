@@ -24,7 +24,6 @@ const TargetSchema = mongoose.Schema(
         due: {
             type: Date,
             required: true,
-            default: new Date(new Date().setHours(24, 0, 0, 0))
         },
         email: {
             type: String,

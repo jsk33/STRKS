@@ -1,17 +1,17 @@
-const newTargetForm = document.querySelector(".newTargetForm-js");
-const newTargetNameTextField = newTargetForm.querySelector("#targetName");
-const newTargetDescriptionTextField = newTargetForm.querySelector("#targetDescription");
-const targetList = document.querySelector(".targetList-js");
+const newTargetForm = document.querySelector(".newTargetForm-js")
+const newTargetNameTextField = newTargetForm.querySelector("#targetName")
+const newTargetDescriptionTextField = newTargetForm.querySelector("#targetDescription")
+const targetList = document.querySelector(".targetList-js")
 
-let targets = [];
+let targets = []
 
 async function handleSubmit(event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    const newTargetName = newTargetNameTextField.value;
-    const newTargetDescription = newTargetDescriptionTextField.value;
-    const dataToPost = { name: newTargetName, description: newTargetDescription }
-    const endpoint = "http://localhost:8000/api/targets";
+    const newTargetName = newTargetNameTextField.value
+    const newTargetDescription = newTargetDescriptionTextField.value
+    const dataToPost = { name: newTargetName, description: newTargetDescription, due: new Date(new Date().setHours(24, 0, 0, 0)) }
+    const endpoint = "http://localhost:8000/api/targets"
 
     try {
         await fetch(endpoint, {
@@ -40,38 +40,32 @@ async function handleSubmit(event) {
 }
 
 async function handleComplete(event) {
-    console.log("This item is complete. The count will increment by 1.");
-
     // update the completed target item using its id and count
-    targetID = event.target.parentNode.id;
-    const endpointID = `http://localhost:8000/api/targets/${targetID}`;
-    const newCount = parseInt(event.target.parentNode.className) + 1;
-    
-    // updateData(endpointID, [{ propName: "count", value: newCount }, { propName: "due", value: new Date(new Date().setHours(48, 0, 0, 0)) }]).then((data) => {
-    //     console.log(data);
-    //     targetList.innerHTML = '';
-    //     fetchTargets();
-    //     renderTargets(targets);
-    // });
+    const targetListElement = event.target.parentElement
+    const targetID = targetListElement.id
+    const endpointID = `http://localhost:8000/api/targets/${targetID}`
+    const newCount = parseInt(targetListElement.className) + 1
 
-    const updatedData = await updateData(endpointID, [{ propName: "count", value: newCount }, { propName: "due", value: "placeholder" }]);
-    console.log(updatedData);
-    await fetchTargets();
-    targetList.innerHTML = '';
-    renderTargets(targets);
-}
+    const dataToUpdate = { count: newCount, due: new Date(new Date().setHours(48, 0, 0, 0)) }
+        
+    try {
+        await fetch(endpointID, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToUpdate)
+        })
+    } catch (err) {
+        console.log(err.message)
+    }
 
-async function updateData(url = '', data = {}) {
-    // Default options are marked with *
-    const response = await fetch(url, {
-        method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
-        headers: {
-          'Content-Type': 'application/json'
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify(data) // body data type must match "Content-Type" header
-    });
-    return await response.json(); // parses JSON response into native JavaScript objects
+    // get the updated list of targets
+    await fetchTargets()
+
+    // render the updated list of targets
+    targetList.innerHTML = ''
+    renderTargets(targets)
 }
 
 async function handleDelete(event) {
@@ -91,7 +85,7 @@ async function handleDelete(event) {
             .then(res => console.log(`The following has been deleted: ${ res.name }`))
         
         // remove the target item from the rendered list of targets
-        targetListElement.remove();
+        targetListElement.remove()
     } catch (err) {
         console.log(err.message)
     }
@@ -100,85 +94,80 @@ async function handleDelete(event) {
 function renderTargets(targets) {
     // create a new list item for each target and append to the list
     targets.forEach(target => {
-        const listItem = document.createElement("li");
-        const deleteBtn = document.createElement("button");
-        const completeBtn = document.createElement("button");
-        const span = document.createElement("span");
+        const listItem = document.createElement("li")
+        const deleteBtn = document.createElement("button")
+        const completeBtn = document.createElement("button")
+        const span = document.createElement("span")
 
-        listItem.id = target._id;
-        listItem.className = target.count;
+        listItem.id = target._id
+        listItem.className = target.count
 
-        deleteBtn.innerText = "❌";
-        deleteBtn.addEventListener("click", handleDelete);
+        deleteBtn.innerText = "❌"
+        deleteBtn.addEventListener("click", handleDelete)
 
         completeBtn.innerText = "✅"
-        completeBtn.addEventListener("click", handleComplete);
+        completeBtn.addEventListener("click", handleComplete)
 
-        span.innerText = `name: ${target.name} \n description: ${target.description} \n count: ${target.count} \n`;
+        span.innerText = `name: ${target.name} \n description: ${target.description} \n count: ${target.count} \n`
 
-        listItem.appendChild(span);
-        listItem.appendChild(completeBtn);
-        listItem.appendChild(deleteBtn);
+        listItem.appendChild(span)
+        listItem.appendChild(completeBtn)
+        listItem.appendChild(deleteBtn)
 
-        targetList.appendChild(listItem);
+        targetList.appendChild(listItem)
     })
 }
 
 async function fetchTargets() {
-    const response = await fetch('http://localhost:8000/api/targets');
-    const fetchedData = await response.json();
+    const response = await fetch('http://localhost:8000/api/targets')
+    const fetchedData = await response.json()
 
-    targets = fetchedData;
-    console.log(targets);
+    targets = fetchedData
+    console.log(targets)
 }
 
-// async function checkTargets(targets) {
-//     // for each target, check if due date has passed
-//     targets.forEach(target => {
-//         if (new Date(target.due) < new Date()) {
-//             // due date has passed -> set its count to zero and its due date to midnight tonight
-//             const targetID = target._id;
-//             const endpointID = `http://localhost:8000/api/targets/${targetID}`;
-//             const data = { message: "overdue" }
+async function checkTargets(targets) {
+    // for each target, check if due date has passed
+    targets.forEach(async target => {
+        if (new Date(target.due) < new Date()) {
+            // due date has passed -> set its count to zero and its due date to midnight tonight
+            const targetID = target._id;
+            const endpointID = `http://localhost:8000/api/targets/${targetID}`;
+            const dataToUpdate = { count: 0, due: new Date(new Date().setHours(24, 0, 0, 0)) }
 
 
-//             const response = await fetch(endpointID, {
-//                 method: 'PATCH', // *GET, POST, PUT, DELETE, etc.
-//                 headers: {
-//                   'Content-Type': 'application/json'
-//                 },
-//                 body: JSON.stringify(data)
-//             });
+            const response = await fetch(endpointID, {
+                method: 'PATCH',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToUpdate)
+            })
 
-//             const updatedData = await response.json();
-//             console.log(updatedData);
-
-
-//             // updateData(endpointID, [{ propName: "count", value: 0 }, { propName: "due", value: new Date(new Date().setHours(24, 0, 0, 0)) }])
-//             //     .then((data) => {
-//             //         console.log(data);
-//             //         console.log(`${target.name}'s streak count has been reset to zero`);
-//             //     });
-//         }
-//     });
-
-//     console.log("checked targets");
-// }
+            const updatedData = await response.json()
+            console.log('The due date of the following target has passed & has been reset:')
+            console.log(updatedData)
+        }
+    })
+}
 
 async function init() {
     newTargetForm.addEventListener("submit", handleSubmit);
     
     try {
-        await fetchTargets();
+        await fetchTargets()
+
+        // check fetched targets & reset count on appropriate targets (i.e. those with passed due dates)
+        await checkTargets(targets)
+
+        // fetch potentially updated list of targets
+        await fetchTargets()
+
+        // finally render the list of targets
+        renderTargets(targets)
     } catch (err) {
-        console.log("could not fetch")
+        console.log(err.message)
     }
-    
-    // check the fetched targets on whether they're expired or not; take necessay actions and fetch again
-    // await checkTargets(targets);
-    // await fetchTargets();
-    
-    renderTargets(targets);
 }
 
-init();
+init()

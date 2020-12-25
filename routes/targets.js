@@ -31,44 +31,51 @@ router.post('/', requiresAuth(), async (req, res) => {
         {
             name: req.body.name,
             description: req.body.description,
+            due: req.body.due,
             email: req.oidc.user.email
         } 
-    );
+    )
     
     try {
-        const savedTarget = await newTarget.save();
-        res.status(200).json(savedTarget);
+        const savedTarget = await newTarget.save()
+        res.status(200).json(savedTarget)
     } catch(err) {
-        res.status(400).json({ message: err.message });
+        res.status(400).json({ message: err.message })
     }
-});
+})
 
 // UPDATE A TARGET
 router.patch('/:targetID', requiresAuth(), async (req, res) => {
-    // if you don't want to update every single key-value pair of the object
-    // just see what you want to update from the req.body
-    // need to make sure the req.body is an array of objects, instead of an object so that it can be iterable
-    // the req.body should also specify the propName (ex. "prop name: name", if you want to update the name)
-    const updateOps = {};
-    for (const ops of req.body) {
-        if (ops.propName === "due") {
-            updateOps[ops.propName] = new Date(new Date().setHours(48, 0, 0, 0));
-        } else {
-            updateOps[ops.propName] = ops.value;
-        }
+    const dataToUpdate = {
+        count: req.body.count,
+        due: req.body.due
     }
-    
+
     try {
         const target = await Target.updateOne( 
             { _id: req.params.targetID },
-            { $set: updateOps }
+            { $set: dataToUpdate }
             // for example: { $set: {name: req.body.name} }
         );
         res.status(200).json(target);
     } catch(err) {
         res.status(500).json({ message: err.message });
     }
-});
+})
+
+// RESET COUNT WHEN DUE DATE HAS PASSED
+// if you don't want to update every single key-value pair of the object
+    // just see what you want to update from the req.body
+    // need to make sure the req.body is an array of objects, instead of an object so that it can be iterable
+    // the req.body should also specify the propName (ex. "prop name: name", if you want to update the name)
+    // const updateOps = {};
+    // for (const ops of req.body) {
+    //     if (ops.propName === "due") {
+    //         updateOps[ops.propName] = new Date(new Date().setHours(48, 0, 0, 0));
+    //     } else {
+    //         updateOps[ops.propName] = ops.value;
+    //     }
+    // }
 
 // DELETE A TARGET
 router.delete('/:targetID', requiresAuth(), async (req, res) => {
