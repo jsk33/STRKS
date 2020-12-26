@@ -46,7 +46,7 @@ async function handleComplete(event) {
     const endpointID = `http://localhost:8000/api/targets/${targetID}`
     const newCount = parseInt(targetListElement.className) + 1
 
-    const dataToUpdate = { count: newCount, due: new Date(new Date().setHours(48, 0, 0, 0)) }
+    const dataToUpdate = { count: newCount, due: new Date(new Date().setHours(48, 0, 0, 0)), status: true }
         
     try {
         await fetch(endpointID, {
@@ -107,6 +107,9 @@ function renderTargets(targets) {
 
         completeBtn.innerText = "✅"
         completeBtn.addEventListener("click", handleComplete)
+        if (target.status == true) {
+            completeBtn.setAttribute("disabled", true)
+        }
 
         span.innerText = `name: ${target.name} \n description: ${target.description} \n count: ${target.count} \n`
 
@@ -129,24 +132,40 @@ async function fetchTargets() {
 async function checkTargets(targets) {
     // for each target, check if due date has passed
     targets.forEach(async target => {
+        const targetID = target._id
+        const endpointID = `http://localhost:8000/api/targets/${targetID}`
+        
         if (new Date(target.due) < new Date()) {
             // due date has passed -> set its count to zero and its due date to midnight tonight
-            const targetID = target._id;
-            const endpointID = `http://localhost:8000/api/targets/${targetID}`;
-            const dataToUpdate = { count: 0, due: new Date(new Date().setHours(24, 0, 0, 0)) }
+            const dataToUpdate = { count: 0, due: new Date(new Date().setHours(24, 0, 0, 0)), status: false }
 
-
-            const response = await fetch(endpointID, {
-                method: 'PATCH',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dataToUpdate)
-            })
-
-            const updatedData = await response.json()
-            console.log('The due date of the following target has passed & has been reset:')
-            console.log(updatedData)
+            try {
+                await fetch(endpointID, {
+                    method: 'PATCH',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataToUpdate)
+                }).then(res => res.json()).then(console.log)
+            } catch (err) {
+                console.log(err.message)
+            }
+        } else if (new Date() < new Date(target.due) && new Date() > new Date(target.due).setDate()-1) {
+            // right now: somewhere in the 24 hour window immediately before the due date
+            // status should be false so that the activity may be completed
+            const dataToUpdate = { status: false }
+            
+            try {
+                await fetch(endpointID, {
+                    method: 'PATCH',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataToUpdate)
+                }).then(res => res.json()).then(console.log)
+            } catch (err) {
+                console.log(err.message)
+            }
         }
     })
 }

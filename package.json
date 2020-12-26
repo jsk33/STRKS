@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/jsk33/Streaks-REST-API#readme",
   "dependencies": {
+    "bulma": "^0.9.1",
     "connect-mongo": "^3.2.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -26,9 +27,9 @@
     "express-openid-connect": "^2.1.0",
     "mongodb": "^3.6.3",
     "mongoose": "^5.9.5",
+    "mquery": ">=3.2.3",
     "node-fetch": "^2.6.1",
-    "pug": "^3.0.0",
-    "mquery": ">=3.2.3"
+    "pug": "^3.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

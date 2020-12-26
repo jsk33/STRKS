@@ -8,22 +8,22 @@ const { auth } = require('express-openid-connect')
 // GET ALL TARGETS 
 router.get('/', requiresAuth(), async (req, res) => {
     try {
-        const targets = await Target.find({ email: req.oidc.user.email });
-        res.status(200).json(targets);
+        const targets = await Target.find({ email: req.oidc.user.email })
+        res.status(200).json(targets)
     } catch(err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message })
     }
-});
+})
 
 // GET A SPECIFIC TARGET
 router.get('/:targetID', requiresAuth(), async (req, res) => {
     try {
-        const target = await Target.findById(req.params.targetID);
-        res.status(200).json(target);
+        const target = await Target.findById(req.params.targetID)
+        res.status(200).json(target)
     } catch(err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message })
     }
-});
+})
 
 // POST A TARGET
 router.post('/', requiresAuth(), async (req, res) => {
@@ -48,7 +48,8 @@ router.post('/', requiresAuth(), async (req, res) => {
 router.patch('/:targetID', requiresAuth(), async (req, res) => {
     const dataToUpdate = {
         count: req.body.count,
-        due: req.body.due
+        due: req.body.due,
+        status: req.body.staus
     }
 
     try {
@@ -56,10 +57,10 @@ router.patch('/:targetID', requiresAuth(), async (req, res) => {
             { _id: req.params.targetID },
             { $set: dataToUpdate }
             // for example: { $set: {name: req.body.name} }
-        );
-        res.status(200).json(target);
+        )
+        res.status(200).json(target)
     } catch(err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message })
     }
 })
 
@@ -81,10 +82,10 @@ router.patch('/:targetID', requiresAuth(), async (req, res) => {
 router.delete('/:targetID', requiresAuth(), async (req, res) => {
     try {
         const removedTarget = await Target.findOneAndRemove({_id: req.params.targetID}, {useFindAndModify: false});
-        res.status(200).json(removedTarget);
+        res.status(200).json(removedTarget)
     } catch(err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: err.message })
     }
-});
+})
 
-module.exports = router;
+module.exports = router
