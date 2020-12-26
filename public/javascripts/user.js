@@ -130,12 +130,18 @@ async function fetchTargets() {
 }
 
 async function checkTargets(targets) {
+    
+
     // for each target, check if due date has passed
     targets.forEach(async target => {
         const targetID = target._id
         const endpointID = `http://localhost:8000/api/targets/${targetID}`
         
-        if (new Date(target.due) < new Date()) {
+        const currDate = new Date()
+        const dueDate = new Date(target.due)
+        const dayBeforeDue = new Date(target.due).setDate(dueDate.getDate() - 1)
+
+        if (dueDate < currDate) {
             // due date has passed -> set its count to zero and its due date to midnight tonight
             const dataToUpdate = { count: 0, due: new Date(new Date().setHours(24, 0, 0, 0)), status: false }
 
@@ -150,10 +156,10 @@ async function checkTargets(targets) {
             } catch (err) {
                 console.log(err.message)
             }
-        } else if (new Date() < new Date(target.due) && new Date() > new Date(target.due).setDate()-1) {
+        } else if (target.status && currDate < dueDate && currDate > dayBeforeDue) {
             // right now: somewhere in the 24 hour window immediately before the due date
             // status should be false so that the activity may be completed
-            const dataToUpdate = { status: false }
+            const dataToUpdate = { status: false, count: target.count, due: target.due }
             
             try {
                 await fetch(endpointID, {

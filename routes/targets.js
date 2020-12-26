@@ -49,7 +49,7 @@ router.patch('/:targetID', requiresAuth(), async (req, res) => {
     const dataToUpdate = {
         count: req.body.count,
         due: req.body.due,
-        status: req.body.staus
+        status: req.body.status
     }
 
     try {
