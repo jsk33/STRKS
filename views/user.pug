@@ -1,27 +1,33 @@
 extends layout
 
 block layout-content
-    header
-        nav
-            a(href='/') STRKS
-            ul
-                li
-                    a(href='/rewards') REWARDS
-                li
-                    a(href='/about') ABOUT
-                li 
-                    a(href='/logout') LOG-OUT
+    nav.navbar(role="navigation" aria-label="main navigation")
+        .container
+            .navbar-brand
+                a.navbar-item(href='/') STRKS
+            .navbar-menu
+                .navbar-start
+                    a.navbar-item(href='/rewards') REWARDS
+                    a.navbar-item(href='/about') ABOUT 
+                .navbar-end
+                    a.button.is-dark(href='/logout') LOG-OUT
+    .container
+        form(class="newTargetForm-js")
+            .field
+                .control
+                    input.input.is-small(type="text" id="targetName" placeholder="new target")
+            .field
+                .control
+                    input.input.is-small(type="text" id="targetDescription" placeholder="describe your target")
+            input.input.is-small.is-rounded.is-dark(type="submit" value="Register your new target")
     
-    form(class="newTargetForm-js")
-        .form-group
-            input(type="text" id="targetName" placeholder="new target")
-        .form-group
-            input(type="text" id="targetDescription" placeholder="describe your target")
-        br
-        input(type="submit" value="Register your new target")
+    section.hero.is-dark
+        .hero-body
+            .container
+                h1.title Your Targets:
+                h2.subtitle Keep the streaks going!
     
-    h3 Your Targets:
-    
-    ul(class="targetList-js")
+    .container
+        ul(class="targetList-js")
 
     script(src="/javascripts/user.js")
