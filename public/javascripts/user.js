@@ -97,23 +97,33 @@ function renderTargets(targets) {
         const listItem = document.createElement("li")
         const deleteBtn = document.createElement("button")
         const completeBtn = document.createElement("button")
-        const span = document.createElement("span")
+        const nameSpan = document.createElement("p")
+        const descriptionSpan = document.createElement("p")
+        const countSpan = document.createElement("p")
+
 
         listItem.id = target._id
         listItem.className = target.count
 
         deleteBtn.innerText = "❌"
         deleteBtn.addEventListener("click", handleDelete)
+        deleteBtn.className = "button is-danger is-light is-small is-outlined is-rounded"
 
         completeBtn.innerText = "✅"
         completeBtn.addEventListener("click", handleComplete)
+        completeBtn.className = "button is-success is-light is-small is-outlined is-rounded"
         if (target.status == true) {
             completeBtn.setAttribute("disabled", true)
         }
 
-        span.innerText = `name: ${target.name} \n description: ${target.description} \n count: ${target.count} \n`
+        nameSpan.innerText = `name: ${target.name}`
+        descriptionSpan.innerText = `description: ${target.description}`
+        countSpan.innerText = `count: ${target.count}`
 
-        listItem.appendChild(span)
+
+        listItem.appendChild(nameSpan)
+        nameSpan.appendChild(descriptionSpan)
+        nameSpan.appendChild(countSpan)
         listItem.appendChild(completeBtn)
         listItem.appendChild(deleteBtn)
 
