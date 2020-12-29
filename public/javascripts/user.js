@@ -95,37 +95,54 @@ function renderTargets(targets) {
     // create a new list item for each target and append to the list
     targets.forEach(target => {
         const listItem = document.createElement("li")
-        const deleteBtn = document.createElement("button")
-        const completeBtn = document.createElement("button")
-        const nameSpan = document.createElement("p")
-        const descriptionSpan = document.createElement("p")
-        const countSpan = document.createElement("p")
-
-
         listItem.id = target._id
         listItem.className = target.count
 
-        deleteBtn.innerText = "❌"
-        deleteBtn.addEventListener("click", handleDelete)
-        deleteBtn.className = "button is-danger is-light is-small is-outlined is-rounded"
+        // create a card containing name, description, count
+        const cardDiv = document.createElement("div")
+        cardDiv.className = "card"
+        const cardHeader = document.createElement("header")
+        cardHeader.className = "card-header"
+        const targetName = document.createElement("p")
+        targetName.className = "card-header-title"
+        targetName.innerText = `${target.name}`
 
+        cardDiv.appendChild(cardHeader)
+        cardHeader.appendChild(targetName)
+
+        const cardContent = document.createElement("div")
+        cardContent.className = "card-content"
+        const targetDescription = document.createElement("div")
+        targetDescription.className = "content"
+        targetDescription.innerText = `description: ${target.description}`
+
+        cardContent.appendChild(targetDescription)
+        cardDiv.appendChild(cardContent)
+
+        const cardFooter = document.createElement("footer")
+        cardFooter.className = "card-footer"
+        
+        const targetCount = document.createElement("p")
+        targetCount.innerText = `${target.count}`
+        targetCount.className = "card-footer-item"
+        const completeBtn = document.createElement("a")
         completeBtn.innerText = "✅"
         completeBtn.addEventListener("click", handleComplete)
-        completeBtn.className = "button is-success is-light is-small is-outlined is-rounded"
+        completeBtn.className = "button is-success is-light card-footer-item"
         if (target.status == true) {
             completeBtn.setAttribute("disabled", true)
         }
+        const deleteBtn = document.createElement("a")
+        deleteBtn.innerText = "❌"
+        deleteBtn.addEventListener("click", handleDelete)
+        deleteBtn.className = "button is-danger is-light card-footer-item"
 
-        nameSpan.innerText = `name: ${target.name}`
-        descriptionSpan.innerText = `description: ${target.description}`
-        countSpan.innerText = `count: ${target.count}`
+        cardDiv.appendChild(cardFooter)
+        cardFooter.appendChild(targetCount)
+        cardFooter.appendChild(completeBtn)
+        cardFooter.appendChild(deleteBtn)
 
-
-        listItem.appendChild(nameSpan)
-        nameSpan.appendChild(descriptionSpan)
-        nameSpan.appendChild(countSpan)
-        listItem.appendChild(completeBtn)
-        listItem.appendChild(deleteBtn)
+        listItem.appendChild(cardDiv)
 
         targetList.appendChild(listItem)
     })
