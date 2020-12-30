@@ -41,7 +41,7 @@ async function handleSubmit(event) {
 
 async function handleComplete(event) {
     // update the completed target item using its id and count
-    const targetListElement = event.target.parentElement
+    const targetListElement = event.target.parentElement.parentElement.parentElement
     const targetID = targetListElement.id
     const endpointID = `http://localhost:8000/api/targets/${targetID}`
     const newCount = parseInt(targetListElement.className) + 1
@@ -70,7 +70,7 @@ async function handleComplete(event) {
 
 async function handleDelete(event) {
     // delete the target item using its id
-    const targetListElement = event.target.parentElement
+    const targetListElement = event.target.parentElement.parentElement.parentElement
     const targetID = targetListElement.id
     const endpointID = `http://localhost:8000/api/targets/${targetID}`
 
