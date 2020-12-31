@@ -1,7 +1,7 @@
 extends layout
 
 block layout-content
-    .column.is-full
+    .column
         nav.navbar(role="navigation" aria-label="main navigation")
             .navbar-brand
                 a.navbar-item(href='/' style='font-weight: bold; font-size: large') STRKS
@@ -20,19 +20,19 @@ block layout-content
         form(class="newTargetForm-js" style='text-align: center')
             .field
                 .control
-                    input.input.is-small.is-primary(type="text" id="targetName" placeholder="new target")
+                    input.input.is-small.is-primary(type="text" id="targetName" placeholder="New target")
             .field
                 .control
-                    input.input.is-small.is-info(type="text" id="targetDescription" placeholder="describe your target")
+                    input.input.is-small.is-info(type="text" id="targetDescription" placeholder="Describe your target")
             .container(style='margin: auto')
                 input.button.is-small.is-rounded.is-light(type="submit" value="Register your new target")
     
     section.hero.is-dark.is-fullheight
         .hero-body
-            .container
+            .container(style='margin-left: 50px')
                 h1.title Your Targets:
                 h2.subtitle Keep the streaks going!
-            .container
+            .container(style='margin-right: 30px')
                 ul(class="targetList-js")
 
     script(src="/javascripts/user.js")

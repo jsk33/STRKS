@@ -101,8 +101,10 @@ function renderTargets(targets) {
         // create a card containing name, description, count
         const cardDiv = document.createElement("div")
         cardDiv.className = "card"
+
         const cardHeader = document.createElement("header")
         cardHeader.className = "card-header"
+
         const targetName = document.createElement("p")
         targetName.className = "card-header-title"
         targetName.innerText = `${target.name}`
@@ -125,6 +127,8 @@ function renderTargets(targets) {
         const targetCount = document.createElement("p")
         targetCount.innerText = `${target.count}`
         targetCount.className = "card-footer-item"
+        targetCount.style.color = "green"
+        targetCount.style.fontWeight = "bold";
         const completeBtn = document.createElement("a")
 
         const completeBtnWrapper = document.createElement("div")

@@ -15,12 +15,28 @@ block layout-content
                     a.navbar-item(href='/about') about 
                 .navbar-end
                     .navbar-item
-                        a.button.is-dark.is-small(href='/login') log-in
+                        if (authenticated)
+                            a.button.is-dark.is-small(href='/logout') log-out
+                        else
+                            a.button.is-dark.is-small(href='/login') log-in
     section.hero.is-light(style="margin-top: 9em")
         .hero-body
             .container
-                h1.title Wecome to STRKS
-                p log-in to continue
+                h1.title About STRKS
+                p Take charge of your daily habits. Become the person you've always wanted to be.
+                br
+                p
+                    | STRKS is based on the idea that you are an accumulation of your daily habits.
+                    | Whether your goal is to pursue a certain career, become a reader, have a regular sleep cycle, or learn to play an instrument, 
+                    | good daily habits are what will eventually get you there.
+                    | STRKS allows you to organize your desired habits while providing an instinctive way to enforce them: streaks.
+                    | Having a target activity (ex. reading a book for 20 minutes) tied to a daily streak count,
+                    | which resets to zero if you fail to complete it before the end of day, is sure to help you get through it.
+                    | Furthermore, seeing your streak count increase every day gives you a visible, basic yet concrete sense of accomplishment. 
+                    | You can also set personal rewards for reaching streak milestones for even more motivation and "game-ification".
+                    | Why not treat yourself to an e-Reader after 30 days straight of daily reading?
+                br 
+                p So go ahead. Take advantage of the streak mentality and start building powerful daily habits!
     script.
         document.addEventListener('DOMContentLoaded', () => {
 

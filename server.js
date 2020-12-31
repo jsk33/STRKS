@@ -39,7 +39,7 @@ app.set('view engine', 'pug')
 app.use(express.static(path.join(__dirname, 'public')))
 
 
-//HOMEPAGE routing
+// HOMEPAGE routing
 app.get('/', (req, res) => {
   if (req.oidc.isAuthenticated()) {
     res.redirect('/user')
@@ -47,6 +47,24 @@ app.get('/', (req, res) => {
     res.render('index', { title: 'Home' })
   }
   
+})
+
+// REWARDS routing
+app.get('/rewards', (req, res) => {
+  if (req.oidc.isAuthenticated()) {
+    res.render('rewards', { title: 'Rewards', authenticated: true })
+  } else {
+    res.render('rewards', { title: 'Rewards', autheticated: false })
+  }
+})
+
+// ABOUT routing
+app.get('/about', (req, res) => {
+  if (req.oidc.isAuthenticated()) {
+    res.render('about', { title: 'About', authenticated: true })
+  } else {
+    res.render('about', { title: 'About', autheticated: false })
+  }
 })
 
 // PROFILE routing; example of using 'requiresAuth()' middleware

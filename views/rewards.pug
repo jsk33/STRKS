@@ -15,12 +15,15 @@ block layout-content
                     a.navbar-item(href='/about') about 
                 .navbar-end
                     .navbar-item
-                        a.button.is-dark.is-small(href='/login') log-in
+                        if (authenticated)
+                            a.button.is-dark.is-small(href='/logout') log-out
+                        else
+                            a.button.is-dark.is-small(href='/login') log-in
     section.hero.is-light(style="margin-top: 9em")
         .hero-body
             .container
-                h1.title Wecome to STRKS
-                p log-in to continue
+                h1.title Rewards
+                p In the works at the moment... sorry about the inconvenience!
     script.
         document.addEventListener('DOMContentLoaded', () => {
 
