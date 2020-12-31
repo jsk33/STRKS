@@ -43,7 +43,7 @@ async function handleComplete(event) {
     // update the completed target item using its id and count
     const targetListElement = event.target.parentElement.parentElement.parentElement.parentElement
     const targetID = targetListElement.id
-    const endpointID = `https://strks-web.herokuapp.com/${targetID}`
+    const endpointID = `https://strks-web.herokuapp.com/api/targets/${targetID}`
     const newCount = parseInt(targetListElement.className) + 1
 
     const dataToUpdate = { count: newCount, due: new Date(new Date().setHours(48, 0, 0, 0)), status: true }
@@ -72,7 +72,7 @@ async function handleDelete(event) {
     // delete the target item using its id
     const targetListElement = event.target.parentElement.parentElement.parentElement
     const targetID = targetListElement.id
-    const endpointID = `https://strks-web.herokuapp.com/${targetID}`
+    const endpointID = `https://strks-web.herokuapp.com/api/targets/${targetID}`
 
     try {
         await fetch(endpointID, {
