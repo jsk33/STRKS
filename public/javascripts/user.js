@@ -41,7 +41,7 @@ async function handleSubmit(event) {
 
 async function handleComplete(event) {
     // update the completed target item using its id and count
-    const targetListElement = event.target.parentElement.parentElement.parentElement
+    const targetListElement = event.target.parentElement.parentElement.parentElement.parentElement
     const targetID = targetListElement.id
     const endpointID = `http://localhost:8000/api/targets/${targetID}`
     const newCount = parseInt(targetListElement.className) + 1
@@ -126,20 +126,29 @@ function renderTargets(targets) {
         targetCount.innerText = `${target.count}`
         targetCount.className = "card-footer-item"
         const completeBtn = document.createElement("a")
+
+        const completeBtnWrapper = document.createElement("div")
+        completeBtnWrapper.className = "card-footer-item"
+
         completeBtn.innerText = "✅"
         completeBtn.addEventListener("click", handleComplete)
-        completeBtn.className = "button is-success is-light card-footer-item"
         if (target.status == true) {
-            completeBtn.setAttribute("disabled", true)
+            completeBtn.style.pointerEvents = 'none'
+            completeBtnWrapper.style.cursor = "not-allowed"
+            completeBtn.innerText = "❎"
+
         }
+
+        completeBtnWrapper.appendChild(completeBtn)
+
         const deleteBtn = document.createElement("a")
         deleteBtn.innerText = "❌"
         deleteBtn.addEventListener("click", handleDelete)
-        deleteBtn.className = "button is-danger is-light card-footer-item"
+        deleteBtn.className = "card-footer-item"
 
         cardDiv.appendChild(cardFooter)
         cardFooter.appendChild(targetCount)
-        cardFooter.appendChild(completeBtn)
+        cardFooter.appendChild(completeBtnWrapper)
         cardFooter.appendChild(deleteBtn)
 
         listItem.appendChild(cardDiv)
