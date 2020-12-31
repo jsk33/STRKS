@@ -46,7 +46,6 @@ app.get('/', (req, res) => {
   } else {
     res.render('index', { title: 'Home' })
   }
-  
 })
 
 // REWARDS routing
