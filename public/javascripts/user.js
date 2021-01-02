@@ -4,6 +4,9 @@ const newTargetDescriptionTextField = newTargetForm.querySelector("#targetDescri
 const targetList = document.querySelector(".targetList-js")
 
 let targets = []
+let devURL = 'http://localhost:8000/api/targets'
+let prodURL = 'https://strks-web.herokuapp.com/api/targets'
+let currURL = devURL
 
 async function handleSubmit(event) {
     event.preventDefault()
@@ -11,10 +14,10 @@ async function handleSubmit(event) {
     const newTargetName = newTargetNameTextField.value
     const newTargetDescription = newTargetDescriptionTextField.value
     const dataToPost = { name: newTargetName, description: newTargetDescription, due: new Date(new Date().setHours(24, 0, 0, 0)) }
-    const endpoint = "https://strks-web.herokuapp.com/api/targets"
+    // const endpoint = "https://strks-web.herokuapp.com/api/targets"
 
     try {
-        await fetch(endpoint, {
+        await fetch(currURL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -43,7 +46,7 @@ async function handleComplete(event) {
     // update the completed target item using its id and count
     const targetListElement = event.target.parentElement.parentElement.parentElement.parentElement
     const targetID = targetListElement.id
-    const endpointID = `https://strks-web.herokuapp.com/api/targets/${targetID}`
+    const endpointID = `${currURL}/${targetID}`
     const newCount = parseInt(targetListElement.className) + 1
 
     const dataToUpdate = { count: newCount, due: new Date(new Date().setHours(48, 0, 0, 0)), status: true }
@@ -72,7 +75,7 @@ async function handleDelete(event) {
     // delete the target item using its id
     const targetListElement = event.target.parentElement.parentElement.parentElement
     const targetID = targetListElement.id
-    const endpointID = `https://strks-web.herokuapp.com/api/targets/${targetID}`
+    const endpointID = `${currURL}/${targetID}`
 
     try {
         await fetch(endpointID, {
@@ -162,7 +165,7 @@ function renderTargets(targets) {
 }
 
 async function fetchTargets() {
-    const response = await fetch('https://strks-web.herokuapp.com/api/targets')
+    const response = await fetch(currURL)
     const fetchedData = await response.json()
 
     targets = fetchedData
@@ -175,7 +178,7 @@ async function checkTargets(targets) {
     // for each target, check if due date has passed
     targets.forEach(async target => {
         const targetID = target._id
-        const endpointID = `https://strks-web.herokuapp.com/api/targets/${targetID}`
+        const endpointID = `${currURL}/${targetID}`
         
         const currDate = new Date()
         const dueDate = new Date(target.due)
